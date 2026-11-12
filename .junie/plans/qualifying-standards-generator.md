@@ -193,7 +193,7 @@ Verification follows a tiered testing approach:
 
 # Delivery Steps
 
-###   Step 1: Implement robust Excel ingestion and event normalization engine
+### ✓ Step 1: Implement robust Excel ingestion and event normalization engine
 A standalone ingestion module reliably parses heterogeneous sheet layouts across 2024, 2025, and 2026 workbooks into standardized event models.
 
 - Implement `WorkbookReader` utilizing `xlrd` to parse BIFF8 `.xls` files regardless of variable column offsets and cell spacing.
@@ -202,7 +202,7 @@ A standalone ingestion module reliably parses heterogeneous sheet layouts across
 - Add an event filtering mechanism that detects and excludes relay events (e.g., Events 17 and 18) while retaining all 36 individual strokes across Year 7 and Year 8.
 - Unit test parser against actual 2024, 2025, and 2026 workbooks to verify zero dropped individual events.
 
-###   Step 2: Implement outlier gap detection and n-th position extrapolation algorithms
+### ✓ Step 2: Implement outlier gap detection and n-th position extrapolation algorithms
 The core mathematical engine detects anomalous inter-rank time blowouts and extrapolates accurate $n$-th position times.
 
 - Implement consecutive rank gap analysis calculating $\Delta_i = T_i - T_{i-1}$ across all ordered finishers.
@@ -211,7 +211,7 @@ The core mathematical engine detects anomalous inter-rank time blowouts and extr
 - Implement alternative extrapolation methods: `linear-trend` (ordinary least-squares regression) and `percent-increment` (geometric compounding step).
 - Add unit tests verifying extrapolation behavior on known sparse events (e.g., 2024 Event 4 with 2 swimmers, 2026 Event 32 with 3 swimmers, and 2024 Event 11 with late drop-offs).
 
-###   Step 3: Implement multi-year aggregation engine and configurable CLI runner
+### ✓ Step 3: Implement multi-year aggregation engine and configurable CLI runner
 A multi-year aggregator synthesizes standards across cohorts and exposes a fully featured CLI tool with sensible defaults.
 
 - Implement multi-year event matching to align identical events across annual datasets regardless of internal meet event numbering.
@@ -220,7 +220,7 @@ A multi-year aggregator synthesizes standards across cohorts and exposes a fully
 - Expose outlier multiplier (`--gap-threshold`, default `2.0`) and extrapolation method selector (`--extrapolate`, default `step-average`).
 - Implement CLI argument parsing via Python's standard `argparse` with comprehensive help text, error handling, and repeatable batch execution support.
 
-###   Step 4: Implement multi-format reporting and end-to-end verification
+### ✓ Step 4: Implement multi-format reporting and end-to-end verification
 The pipeline generates comprehensive, stakeholder-ready audit workbooks, standard CSV exports, and execution summaries.
 
 - Implement Excel generation producing a formatted primary `Qualifying Standards` tab ready for school athletic distribution.

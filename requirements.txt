@@ -1,0 +1,4 @@
+# Dependencies for Regional Swimming Qualifying Standards Generator
+xlrd>=2.0.1
+openpyxl>=3.0.0
+numpy>=1.20.0

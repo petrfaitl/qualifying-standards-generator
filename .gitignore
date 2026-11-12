@@ -218,4 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
-*.xls
+*.xls*
+.~lock*
+*.csv
+
