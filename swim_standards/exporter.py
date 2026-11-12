@@ -73,7 +73,7 @@ def export_to_excel(standards: List[AggregatedStandard], filepath: str) -> None:
 
     # Title block
     target_rank_str = f"Rank {standards[0].target_rank} Benchmark" if standards else "Rank 8 Benchmark"
-    ws_standards.append(["Regional Intermediate Schools Swimming Championships"])
+    ws_standards.append(["Regional Schools Swimming Championships"])
     ws_standards.append([f"Official Regional Qualifying Standards ({target_rank_str})"])
     ws_standards.append([])
 
@@ -227,7 +227,7 @@ def print_console_summary(standards: List[AggregatedStandard], quiet: bool = Fal
     width = max(len(header_line) + 2, 90)
 
     print("\n" + "=" * width)
-    print("  REGIONAL INTERMEDIATE SWIMMING QUALIFYING STANDARDS")
+    print("  REGIONAL SWIMMING QUALIFYING STANDARDS")
     print("=" * width)
     print(header_line)
     print("-" * width)

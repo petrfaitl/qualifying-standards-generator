@@ -111,7 +111,7 @@ def resolve_input_files(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Generate regional swimming qualifying standards from historical meet workbooks."
+        description="Generate  swimming qualifying standards from historical meet workbooks."
     )
     parser.add_argument(
         "--inputs",
@@ -183,7 +183,7 @@ def main(args: List[str] = None) -> int:
 
     if not parsed_args.quiet:
         print("\n=======================================================")
-        print("  Regional Swimming Qualifying Standards Generator")
+        print("  Swimming Qualifying Standards Generator")
         print("=======================================================")
         print(f" Target Rank           : {parsed_args.target_rank}")
         print(f" Extrapolation Method  : {parsed_args.extrapolate}")

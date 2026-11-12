@@ -1,6 +1,6 @@
 # Regional Swimming Qualifying Standards Generator
 
-An automated, data-driven system for generating regional swimming championship qualifying standards for Intermediate School Sports (Year 7 and Year 8 Girls and Boys).
+An automated, data-driven system for generating regional swimming championship qualifying standards for  School Sports.
 
 The system balances broad athlete participation against competitive integrity and scheduling efficiency, deriving empirical cutoff times from multi-year meet archives while handling sparse fields and late-heat time blowouts transparently.
 
@@ -60,7 +60,7 @@ This tool resolves those challenges by:
 ## Scope
 
 ### Included Events
-The pipeline automatically identifies, standardizes, and calculates qualifying standards for all **36 individual events** contested in Intermediate School Swimming:
+The pipeline automatically identifies, standardizes, and calculates qualifying standards for all **36 individual events** contested in School Swimming:
 - **School Years**: Year 7 (Y7) and Year 8 (Y8).
 - **Genders**: Girls and Boys.
 - **Distances**: 25m, 50m, and 100m.
