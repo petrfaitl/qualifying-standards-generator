@@ -70,7 +70,7 @@ def resolve_input_files(
 ) -> List[str]:
     """
     Resolves input meet result workbooks from explicit file arguments,
-    an explicit input directory, or sensible generic defaults and directory scans.
+    an explicit input directory, or dynamic directory scans.
     """
     exclude_list = [output_excel] if output_excel else []
 
@@ -88,17 +88,7 @@ def resolve_input_files(
             raise FileNotFoundError(f"No XLS/XLSX meet result files found in directory: {input_dir}")
         return files
 
-    # Default generic filenames
-    generic_candidates = ["results-2024.xls", "results-2025.xls", "results-2026.xls"]
-    if all(os.path.exists(f) for f in generic_candidates):
-        return generic_candidates
-
-    # Check for legacy named files if present
-    legacy_candidates = ["wbop2024-top8.xls", "wbop2025-top8.xls", "wbop2026-top8.xls"]
-    if all(os.path.exists(f) for f in legacy_candidates):
-        return legacy_candidates
-
-    # Fallback: scan current directory for any XLS/XLSX result files
+    # Dynamic scan in current working directory
     scanned = scan_directory_for_results(".", exclude_files=exclude_list)
     if scanned:
         return scanned
@@ -164,6 +154,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Suppress verbose console audit diagnostics"
     )
+    parser.add_argument(
+        "--verbose", "-v",
+        action="store_true",
+        help="Enable detailed diagnostic logging of parser operations and warnings"
+    )
     return parser
 
 
@@ -192,7 +187,7 @@ def main(args: List[str] = None) -> int:
         print(f" Input Files ({len(input_files)})       : {', '.join(input_files)}")
         print("=======================================================\n")
 
-    reader = WorkbookReader(exclude_relays=True)
+    reader = WorkbookReader(exclude_relays=True, verbose=parsed_args.verbose)
     datasets = []
     for filepath in input_files:
         try:
@@ -203,6 +198,16 @@ def main(args: List[str] = None) -> int:
         except Exception as e:
             sys.stderr.write(f"Error reading file '{filepath}': {e}\n")
             return 1
+
+    if parsed_args.verbose and reader.warnings:
+        print("\n--- Diagnostic & Parsing Warnings ---")
+        for w in reader.warnings:
+            print(f"  [!] {w}")
+        print("-------------------------------------\n")
+
+    if not any(len(d) > 0 for d in datasets):
+        sys.stderr.write("Error: No valid individual swimming events found in the provided input files.\n")
+        return 1
 
     aggregator = MultiYearAggregator(
         target_rank=parsed_args.target_rank,

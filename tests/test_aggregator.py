@@ -79,6 +79,76 @@ class TestAggregator(unittest.TestCase):
         self.assertTrue(results[0].annual_results[2024].is_extrapolated)
         self.assertGreater(results[0].standard_seconds, 37.00)
 
+    def test_arbitrary_years_and_partial_events(self):
+        # Test arbitrary calendar years (2021, 2022, 2023, 2028)
+        ev_info_y5 = EventInfo(
+            event_number=1,
+            raw_title="Event 1 Y5G 50 SC Meter Freestyle",
+            gender="Girls",
+            school_year="Y5",
+            age_group="",
+            distance=50,
+            stroke="Freestyle"
+        )
+        ev_info_jr = EventInfo(
+            event_number=2,
+            raw_title="Event 2 Junior Boys 50 SC Meter Backstroke",
+            gender="Boys",
+            school_year="Junior",
+            age_group="",
+            distance=50,
+            stroke="Backstroke"
+        )
+
+        d2021 = [
+            EventResults(event_info=ev_info_y5, meet_year=2021, swimmers=self._make_swimmers(30.0, 36.00)),
+            EventResults(event_info=ev_info_jr, meet_year=2021, swimmers=self._make_swimmers(32.0, 40.00))
+        ]
+        d2022 = [
+            EventResults(event_info=ev_info_y5, meet_year=2022, swimmers=self._make_swimmers(29.0, 35.00))
+            # ev_info_jr not contested in 2022
+        ]
+        d2023 = [
+            EventResults(event_info=ev_info_y5, meet_year=2023, swimmers=self._make_swimmers(31.0, 37.00))
+            # ev_info_jr not contested in 2023
+        ]
+        d2028 = [
+            EventResults(event_info=ev_info_y5, meet_year=2028, swimmers=self._make_swimmers(28.0, 34.00)),
+            EventResults(event_info=ev_info_jr, meet_year=2028, swimmers=self._make_swimmers(30.0, 38.00))
+        ]
+
+        agg = MultiYearAggregator(combine_method="average")
+        results = agg.aggregate_meets([d2021, d2022, d2023, d2028])
+
+        self.assertEqual(len(results), 2)
+        # Event 1 (Y5 Girls 50m Free) is contested in all 4 years: 36, 35, 37, 34 -> Mean = 35.50
+        res_y5 = [r for r in results if r.event_info.school_year == "Y5"][0]
+        self.assertEqual(res_y5.standard_seconds, 35.50)
+        self.assertEqual(sorted(res_y5.annual_results.keys()), [2021, 2022, 2023, 2028])
+
+        # Event 2 (Junior Boys 50m Back) is contested in only 2021 and 2028: 40, 38 -> Mean = 39.00
+        res_jr = [r for r in results if r.event_info.school_year == "Junior"][0]
+        self.assertEqual(res_jr.standard_seconds, 39.00)
+        self.assertEqual(sorted(res_jr.annual_results.keys()), [2021, 2028])
+
+    def test_single_year_dataset(self):
+        ev_info = EventInfo(
+            event_number=1,
+            raw_title="Event 1 Y6B 50 SC Meter Breaststroke",
+            gender="Boys",
+            school_year="Y6",
+            age_group="",
+            distance=50,
+            stroke="Breaststroke"
+        )
+        d2029 = [EventResults(event_info=ev_info, meet_year=2029, swimmers=self._make_swimmers(35.0, 42.00))]
+        agg = MultiYearAggregator(combine_method="average")
+        results = agg.aggregate_meets([d2029])
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].standard_seconds, 42.00)
+        self.assertEqual(results[0].std_dev_seconds, 0.0)
+        self.assertEqual(list(results[0].annual_results.keys()), [2029])
+
 
 if __name__ == '__main__':
     unittest.main()

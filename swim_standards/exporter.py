@@ -73,8 +73,10 @@ def export_to_excel(standards: List[AggregatedStandard], filepath: str) -> None:
 
     # Title block
     target_rank_str = f"Rank {standards[0].target_rank} Benchmark" if standards else "Rank 8 Benchmark"
+    all_years = sorted(list({yr for s in standards for yr in s.annual_results.keys() if yr > 0}))
+    years_summary = ", ".join(str(y) for y in all_years) if all_years else "Multi-Year"
     ws_standards.append(["Regional Schools Swimming Championships"])
-    ws_standards.append([f"Official Regional Qualifying Standards ({target_rank_str})"])
+    ws_standards.append([f"Official Regional Qualifying Standards ({target_rank_str} - {years_summary})"])
     ws_standards.append([])
 
     ws_standards["A1"].font = title_font
@@ -215,16 +217,16 @@ def print_console_summary(standards: List[AggregatedStandard], quiet: bool = Fal
         return
 
     all_years = sorted(list({yr for s in standards for yr in s.annual_results.keys() if yr > 0}))
-    if not all_years:
-        all_years = [2024, 2025, 2026]
+    max_ev_len = max([len(s.event_info.canonical_name) for s in standards] + [17]) if standards else 30
+    ev_col_width = max(max_ev_len + 2, 30)
 
-    header_cols = [f" {'#':>2}", f"{'Event':<30}", f"{'Target':<6}"]
+    header_cols = [f" {'#':>2}", f"{'Event':<{ev_col_width}}", f"{'Target':<6}"]
     for yr in all_years:
         header_cols.append(f"{str(yr):<8}")
     header_cols.append(f"{'Standard':<8}")
 
     header_line = " | ".join(header_cols)
-    width = max(len(header_line) + 2, 90)
+    width = max(len(header_line) + 2, 80)
 
     print("\n" + "=" * width)
     print("  REGIONAL SWIMMING QUALIFYING STANDARDS")
@@ -236,7 +238,7 @@ def print_console_summary(standards: List[AggregatedStandard], quiet: bool = Fal
     total_events = len(standards)
 
     for idx, s in enumerate(standards, start=1):
-        row_cols = [f" {idx:>2}", f"{s.event_info.canonical_name:<30}", f"Rank {s.target_rank:<1}"]
+        row_cols = [f" {idx:>2}", f"{s.event_info.canonical_name:<{ev_col_width}}", f"Rank {s.target_rank:<1}"]
         for yr in all_years:
             yr_res = s.annual_results.get(yr)
             val_str = (yr_res.target_time_str + ("*" if yr_res.is_extrapolated else "")) if yr_res else "-"

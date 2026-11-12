@@ -23,8 +23,8 @@ class EventInfo:
     """Canonical metadata defining a swimming event."""
     event_number: int
     raw_title: str
-    gender: str          # 'Girls' or 'Boys'
-    school_year: str     # 'Y7', 'Y8', or 'Y7&8'
+    gender: str          # 'Girls', 'Boys', or 'Mixed'
+    school_year: str     # 'Y5', 'Y6', 'Y7', 'Y8', 'Junior', 'Intermediate', 'Senior', etc.
     age_group: str       # e.g. '12 & Over', '11 & Under'
     distance: int        # e.g. 25, 50, 100
     stroke: str          # 'Breaststroke', 'Butterfly', 'Backstroke', 'Freestyle', 'IM'
@@ -40,7 +40,33 @@ class EventInfo:
         """Sort key prioritizing standard event schedule."""
         stroke_order = {"Breaststroke": 1, "Backstroke": 2, "Butterfly": 3, "Freestyle": 4, "IM": 5}
         stroke_rank = stroke_order.get(self.stroke, 99)
-        return (self.distance, stroke_rank, self.gender, self.school_year)
+        gender_order = {"Girls": 1, "Boys": 2, "Mixed": 3}
+        gender_rank = gender_order.get(self.gender, 99)
+
+        # School year / division sorting hierarchy
+        sy = self.school_year or ""
+        year_rank = 99.0
+        if sy.startswith("Y") and "&" in sy:
+            parts = sy.replace("Y", "").split("&")
+            try:
+                nums = [float(p) for p in parts]
+                year_rank = sum(nums) / len(nums)
+            except ValueError:
+                year_rank = 99.0
+        elif sy.startswith("Y") and sy[1:].isdigit():
+            year_rank = float(sy[1:])
+        elif sy.isdigit():
+            year_rank = float(sy)
+        elif sy == "Junior":
+            year_rank = 20.0
+        elif sy == "Intermediate":
+            year_rank = 21.0
+        elif sy == "Senior":
+            year_rank = 22.0
+        elif sy == "Open":
+            year_rank = 23.0
+
+        return (self.distance, stroke_rank, gender_rank, year_rank, self.gender, self.school_year)
 
 
 @dataclass
