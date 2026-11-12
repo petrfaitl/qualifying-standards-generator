@@ -16,6 +16,10 @@ The system balances broad athlete participation against competitive integrity an
   - [Sourcing \& Preparing Meet Result Files](#sourcing--preparing-meet-result-files)
     - [1. Exporting from Hy-Tek Meet Manager](#1-exporting-from-hy-tek-meet-manager)
     - [2. Manually Creating a Result File](#2-manually-creating-a-result-file)
+  - [Downloading the Repository Files](#downloading-the-repository-files)
+    - [Option 1: Clone with Git (Recommended)](#option-1-clone-with-git-recommended)
+    - [Option 2: Download as ZIP Archive](#option-2-download-as-zip-archive)
+    - [Repository Contents](#repository-contents)
   - [System Requirements \& Installation](#system-requirements--installation)
     - [Python Version](#python-version)
     - [Required Packages](#required-packages)
@@ -105,6 +109,39 @@ If you do not have Hy-Tek Meet Manager or need to provide results from another s
 
 ---
 
+## Downloading the Repository Files
+
+To run the qualifying standards generator, you need to download or clone the repository to your local computer.
+
+### Option 1: Clone with Git (Recommended)
+If you have Git installed, open your terminal (PowerShell, Command Prompt, or Bash) and clone the repository:
+
+```powershell
+# Clone the repository to your local machine
+git clone https://github.com/petrfaitl/qualifying-standards-generator.git
+
+# Navigate into the project folder
+cd qualifying-standards-generator
+```
+
+### Option 2: Download as ZIP Archive
+If you do not use Git:
+1. Navigate to the repository page on GitHub: [`https://github.com/petrfaitl/qualifying-standards-generator`](https://github.com/petrfaitl/qualifying-standards-generator)
+2. Click the green **Code** button near the top right of the file list.
+3. Select **Download ZIP** from the dropdown menu.
+4. Extract the downloaded ZIP archive to your desired directory (e.g., `C:\Swimming\qualifying-standards-generator`).
+5. Open your terminal in the extracted folder.
+
+### Repository Contents
+Once downloaded or extracted, verify that the project directory contains the required files and modules:
+- `generate_qualifying_standards.py`: The executable command-line interface.
+- `requirements.txt`: Python package dependency specifications.
+- `swim_standards/`: Python package containing parser, extrapolator, aggregator, and exporter modules.
+- `tests/`: Automated unit and integration test suite.
+- `results-2024.xls`, `results-2025.xls`, `results-2026.xls`: Historical meet result archives.
+
+---
+
 ## System Requirements & Installation
 
 ### Python Version
@@ -122,7 +159,7 @@ The script relies on three standard third-party libraries:
 
 1. Open your terminal (PowerShell, Command Prompt, or Bash) in the project directory:
    ```powershell
-   cd "C:\Swimming\HistoricalResults"
+   cd qualifying-standards-generator
    ```
 
 2. Install all required dependencies using `requirements.txt`:
