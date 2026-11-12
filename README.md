@@ -122,7 +122,7 @@ The script relies on three standard third-party libraries:
 
 1. Open your terminal (PowerShell, Command Prompt, or Bash) in the project directory:
    ```powershell
-   cd "C:\Meets\Meets Regional\School Sports\2027\Intermediate\WBOP"
+   cd "C:\Swimming\HistoricalResults"
    ```
 
 2. Install all required dependencies using `requirements.txt`:
